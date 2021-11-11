@@ -24,59 +24,27 @@ void clearCS()
   delayMicroseconds(1);
 }
 
+void clockCycle()
+{
+  digitalWrite(SCL, LOW);  // Beginning of CLOCK Cycle
+  digitalWrite(SCL, HIGH);
+  digitalWrite(SCL, LOW); // Ending of CLOCK Cycle
+}
+
 void command(unsigned char data) // Command Writing Function
 {
   unsigned int m;
 
   clearCS();
 
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 1st - '1' of STARTING byte
-  digitalWrite(SCL, LOW);  // Beginning of CLOCK Cycle
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW); // Ending of CLOCK Cycle
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 2nd - '1' of STARTING byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 3rd - '1' of STARTING byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 4th - '1' of STARTING byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 5th - '1' of STARTING byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, LOW); // Writing to the Slim OLED
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, LOW); //LOW FOR COMMAND funtion on DC bit
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, LOW); // Final 0 bit to end starting byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
+  // Send 0b00011111 to enter command write mode
+  uint8_t writeCommand = 0b00011111;
+  for(int i = 0; i < 8; i++)
+  {
+    delayMicroseconds(1);
+    digitalWrite(SDI, (writeCommand >> i) & 0x01);
+    clockCycle();
+  }
 
   for (m = 0; m <= 3; m++) // First 4 bits of data retrieval
   {
@@ -146,53 +114,14 @@ void data(unsigned char data)
 
   clearCS();
 
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 1st - '1'
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 2nd - '1'
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 3rd - '1'
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 4th - '1'
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // 5th - '1'
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, LOW); // Write
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, HIGH); // HIGH for DATA
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
-
-  delayMicroseconds(1);
-  digitalWrite(SDI, LOW); // Final 0 bit to end starting byte
-  digitalWrite(SCL, LOW);
-  digitalWrite(SCL, HIGH);
-  digitalWrite(SCL, LOW);
+  // Send 0b00011111 to enter data write mode
+  uint8_t writeData = 0b01011111;
+  for(int i = 0; i < 8; i++)
+  {
+    delayMicroseconds(1);
+    digitalWrite(SDI, (writeData >> i) & 0x01);
+    clockCycle();
+  }
 
   for (m = 0; m <= 3; m++) // Bits 0-3
   {
