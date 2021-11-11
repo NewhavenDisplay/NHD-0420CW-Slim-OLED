@@ -34,22 +34,9 @@ void clockCycle()
   delayMicroseconds(1);
 }
 
-void command(unsigned char data) // Command Writing Function
+void putData (uint8_t data)
 {
-  unsigned int m;
-
-  clearCS();
-
-  // Send 0b00011111 to enter command write mode
-  uint8_t writeCommand = 0b00011111;
-  for(int i = 0; i < 8; i++)
-  {
-    delayMicroseconds(1);
-    digitalWrite(SDI, (writeCommand >> i) & 0x01);
-    clockCycle();
-  }
-
-  for (m = 0; m <= 3; m++) // First 4 bits of data retrieval
+  for (int m = 0; m < 8; m++) 
   {
     if ((data & 0x01) == 0x01) // Comapring the LSB i.e. (0000 0001)
     {
@@ -61,31 +48,21 @@ void command(unsigned char data) // Command Writing Function
     data = (data >> 1); // Left Shift 1 bit to be compared
     clockCycle();
   }
+}
 
-  for (m = 4; m <= 7; m++) // Next 4 bits of information all dummy vaulues '0'
-  {
-    digitalWrite(SDI, LOW);
-    clockCycle();
-  }
+void command(unsigned char data) // Command Writing Function
+{
+  uint8_t firstByte = data & 0x0F; // Clear upper nibble.
+  uint8_t secondByte = (data >> 4) & 0x0F; // Right shift by 4 and clear upper nibble.
 
-  for (m = 8; m <= 11; m++) // Next 4 bits
-  {
-    if ((data & 0x01) == 0x01)
-    {
-      digitalWrite(SDI, HIGH);
-    } else {
-      digitalWrite(SDI, LOW);
-    }
-    while (0);
-    data = (data >> 1);
-    clockCycle();
-  }
+  clearCS();
 
-  for (m = 12; m <= 15; m++) // Last 4 bits
-  {
-    digitalWrite(SDI, LOW);
-    clockCycle();
-  }
+  // Send 0b00011111 to enter command write mode
+  uint8_t writeCommand = 0b00011111;
+  putData(writeCommand);
+
+  putData(firstByte);
+  putData(secondByte);
 
   clearCS();
 }
@@ -94,54 +71,17 @@ void data(unsigned char data)
 {
   unsigned int m;
 
+  uint8_t firstByte = data & 0x0F; // Clear upper nibble.
+  uint8_t secondByte = (data >> 4) & 0x0F; // Right shift by 4 and clear upper nibble.
+
   clearCS();
 
   // Send 0b00011111 to enter data write mode
   uint8_t writeData = 0b01011111;
-  for(int i = 0; i < 8; i++)
-  {
-    delayMicroseconds(1);
-    digitalWrite(SDI, (writeData >> i) & 0x01);
-    clockCycle();
-  }
+  putData(writeData);
 
-  for (m = 0; m <= 3; m++) // Bits 0-3
-  {
-    if ((data & 0x01) == 0x01) // Bit Comparator
-    {
-      digitalWrite(SDI, HIGH);
-    } else {
-      digitalWrite(SDI, LOW);
-    }
-    while (0);
-    data = (data >> 1);
-    clockCycle();
-  }
-
-  for (m = 4; m <= 7; m++) // Bits 4-7 All are LOW = 0
-  {
-    digitalWrite(SDI, LOW);
-    clockCycle();
-  }
-
-  for (m = 8; m <= 11; m++) // Bits 8-11
-  {
-    if ((data & 0x01) == 0x01)
-    {
-      digitalWrite(SDI, HIGH);
-    } else {
-      digitalWrite(SDI, LOW);
-    }
-    while (0);
-    data = (data >> 1);
-    clockCycle();
-  }
-
-  for (m = 12; m <= 15; m++) // Bits 12-15 All are LOW = 0
-  {
-    digitalWrite(SDI, LOW);
-    clockCycle();
-  }
+  putData(firstByte);
+  putData(secondByte);
 
   setCS();
 }
