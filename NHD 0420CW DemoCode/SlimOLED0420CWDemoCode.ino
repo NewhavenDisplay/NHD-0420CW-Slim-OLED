@@ -320,7 +320,7 @@ void Clear()
   command(0x02); // Return Home (0,0)
 }
 
-void zation()
+void initialize()
 {
   command(0x2A); // Function Set (extended command set)
   command(0x71); // Function Selection A
@@ -406,7 +406,7 @@ void setup()
   pinMode(11, OUTPUT); // Delcaring SDI as OUTPUT
   pinMode(12, OUTPUT); // Declaring SCL as OUTPUT
 
-  zation();            // Initialization
+  initialize();            // Initialization
   StartMessage();      // Start Message
   delay(5000);
   Clear(); // Clear Screen
@@ -430,5 +430,5 @@ void loop()
   delay(7500);
 
   Clear();  // Clear Screen
-  zation(); // ReInitializae
+  initialize(); // ReInitializae
 }
