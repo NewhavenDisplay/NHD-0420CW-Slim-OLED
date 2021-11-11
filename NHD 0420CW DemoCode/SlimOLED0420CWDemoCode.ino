@@ -52,13 +52,13 @@ void command(unsigned char data) // Command Writing Function
   for (m = 0; m <= 3; m++) // First 4 bits of data retrieval
   {
     if ((data & 0x01) == 0x01) // Comapring the LSB i.e. (0000 0001)
+    {
       digitalWrite(SDI, HIGH);
-    else
+    } else {
       digitalWrite(SDI, LOW);
-    while (0)
-      ;
+    }
+    while (0);
     data = (data >> 1); // Left Shift 1 bit to be compared
-
     clockCycle();
   }
 
@@ -71,9 +71,11 @@ void command(unsigned char data) // Command Writing Function
   for (m = 8; m <= 11; m++) // Next 4 bits
   {
     if ((data & 0x01) == 0x01)
+    {
       digitalWrite(SDI, HIGH);
-    else
+    } else {
       digitalWrite(SDI, LOW);
+    }
     while (0);
     data = (data >> 1);
     clockCycle();
@@ -106,9 +108,11 @@ void data(unsigned char data)
   for (m = 0; m <= 3; m++) // Bits 0-3
   {
     if ((data & 0x01) == 0x01) // Bit Comparator
+    {
       digitalWrite(SDI, HIGH);
-    else
+    } else {
       digitalWrite(SDI, LOW);
+    }
     while (0);
     data = (data >> 1);
     clockCycle();
@@ -123,9 +127,11 @@ void data(unsigned char data)
   for (m = 8; m <= 11; m++) // Bits 8-11
   {
     if ((data & 0x01) == 0x01)
+    {
       digitalWrite(SDI, HIGH);
-    else
+    } else {
       digitalWrite(SDI, LOW);
+    }
     while (0);
     data = (data >> 1);
     clockCycle();
