@@ -241,85 +241,74 @@ void Left()
 }
 
 void Unique()
-{             //Display Special Characters
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x43); //C
-  data(0x68); //h
-  data(0x61); //a
-  data(0x72); //r
-  data(0x61); //a
-  data(0x63); //c
-  data(0x74); //t
-  data(0x65); //e
-  data(0x72); //r
-  data(0x73); //s
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x20); //Space
-  data(0x30); //0
-  data(0x31); //1
-  data(0x32); //2
-  data(0x33); //3
-  data(0x34); //4
-  data(0x35); //5
-  data(0x36); //6
-  data(0x37); //7
-  data(0x38); //8
-  data(0x39); //9
-  data(0x21); //!
-  data(0x22); //"
-  data(0x23); //#
-  data(0x24); //
-  data(0x25); //%
-  data(0x26); //&
-  data(0x27); //'
-  data(0x28); //(
-  data(0x29); //)
-  data(0x2A); //*
-  data(0x2B); //+
-  data(0x2C); //,
-  data(0x2D); //-
-  data(0x2E); //.
-  data(0x2F); ///
-  data(0x3A); //:
-  data(0x3B); //;
-  data(0x3C); //<
-  data(0x3D); //=
-  data(0x3E); //>
-  data(0x3F); //?
-  data(0x8C); //+-
-  data(0x8D); //>-
-  data(0x8E); //<-
-  data(0x8F); //u(micro)
-  data(0x90); //(music symbol)
-  data(0x91); //(music symbol)
-  data(0x92); //Bell
-  data(0x93); //Heart
-  data(0x94); //Diamond
-  data(0x95); //Flower T
-  data(0x96); //LC Bracket L
-  data(0x97); //BR Bracket L
-  data(0x98); //"
-  data(0x99); //"
+{             
+  //Display Special Characters
+
+  for(int i = 0; i < 5; i++)
+  {
+    data(' '); //Space
+  }
+
+  data('C'); //C
+  data('h'); //h
+  data('a'); //a
+  data('r'); //r
+  data('a'); //a
+  data('c'); //c
+  data('t'); //t
+  data('e'); //e
+  data('r'); //r
+  data('s'); //s
+
+  for(int i = 0; i < 5; i++)
+  {
+    data(' '); //Space
+  }
+
+  // Print numbers (0123456789)
+  for(int i = 0x30; i <= 0x39; i++)
+  {
+    data(i);
+  }
+
+  // Print special characters 
+  // (! " #   % & ' ( ) * + , . / )
+  for(int i = 0x21; i <= 0x2F; i++)
+  {
+    data(i);
+  }
+
+  // Print special characters 
+  // (: ; < = > ?)
+  for(int i = 0x3A; i <= 0x3F; i++)
+  {
+    data(i);
+  }
+
+  // Print special characters 
+  // ( +- >- <- u(micro) (music symbol) (music symbol) Bell Heart Diamond FlowerT LCBracketL BRBracketL " ")
+  for(int i = 0x8C; i <= 0x99; i++)
+  {
+    data(i);
+  }
+
   data(0xA2); //$
   data(0xB1); //Cents
+
   data(0xB4); //Lambda
   data(0xB5); //Omega
   data(0xB6); //Pi
   data(0xB7); //Fork
   data(0xB8); //Sum
+
   data(0xDE); //-^
   data(0xDF); //->
   data(0xE0); //-v
   data(0xE1); //<-
+
   data(0xFD); //{
   data(0xFF); //}0
+
   data(0x14); //<<
   data(0x15); //>>
 }
@@ -416,6 +405,7 @@ void setup()
   pinMode(9, OUTPUT);  // Declaring  CS as OUTPUT
   pinMode(11, OUTPUT); // Delcaring SDI as OUTPUT
   pinMode(12, OUTPUT); // Declaring SCL as OUTPUT
+
   zation();            // Initialization
   StartMessage();      // Start Message
   delay(5000);
@@ -427,14 +417,18 @@ void loop()
   Right(); // Scroll Right
   Clear(); // Clear Screen
   delay(100);
+
   Left();  // Scroll Left
   Clear(); // Clear Screen
   delay(100);
+
   Unique(); // Show Unique Characters
   delay(7500);
+
   Clear(); // Clear Screen
   Big();   // Double Height Characters
   delay(7500);
+
   Clear();  // Clear Screen
   zation(); // ReInitializae
 }
