@@ -27,8 +27,11 @@ void clearCS()
 void clockCycle()
 {
   digitalWrite(SCL, LOW);  // Beginning of CLOCK Cycle
+  delayMicroseconds(1);
   digitalWrite(SCL, HIGH);
+  delayMicroseconds(1);
   digitalWrite(SCL, LOW); // Ending of CLOCK Cycle
+  delayMicroseconds(1);
 }
 
 void command(unsigned char data) // Command Writing Function
@@ -56,24 +59,13 @@ void command(unsigned char data) // Command Writing Function
       ;
     data = (data >> 1); // Left Shift 1 bit to be compared
 
-    digitalWrite(SCL, LOW);
-    while (0)
-      ;
-    digitalWrite(SCL, HIGH);
-    while (0)
-      ;
-    digitalWrite(SCL, LOW);
+    clockCycle();
   }
 
   for (m = 4; m <= 7; m++) // Next 4 bits of information all dummy vaulues '0'
   {
     digitalWrite(SDI, LOW);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
-    digitalWrite(SCL, HIGH);
-    delayMicroseconds(1);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
+    clockCycle();
   }
 
   for (m = 8; m <= 11; m++) // Next 4 bits
@@ -82,27 +74,15 @@ void command(unsigned char data) // Command Writing Function
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
-    while (0)
-      ;
+    while (0);
     data = (data >> 1);
-    digitalWrite(SCL, LOW);
-    while (0)
-      ;
-    digitalWrite(SCL, HIGH);
-    while (0)
-      ;
-    digitalWrite(SCL, LOW);
+    clockCycle();
   }
 
   for (m = 12; m <= 15; m++) // Last 4 bits
   {
     digitalWrite(SDI, LOW);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
-    digitalWrite(SCL, HIGH);
-    delayMicroseconds(1);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
+    clockCycle();
   }
 
   clearCS();
@@ -129,27 +109,15 @@ void data(unsigned char data)
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
-    while (0)
-      ;
+    while (0);
     data = (data >> 1);
-    digitalWrite(SCL, LOW);
-    while (0)
-      ;
-    digitalWrite(SCL, HIGH);
-    while (0)
-      ;
-    digitalWrite(SCL, LOW);
+    clockCycle();
   }
 
   for (m = 4; m <= 7; m++) // Bits 4-7 All are LOW = 0
   {
     digitalWrite(SDI, LOW);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
-    digitalWrite(SCL, HIGH);
-    delayMicroseconds(1);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
+    clockCycle();
   }
 
   for (m = 8; m <= 11; m++) // Bits 8-11
@@ -158,27 +126,15 @@ void data(unsigned char data)
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
-    while (0)
-      ;
+    while (0);
     data = (data >> 1);
-    digitalWrite(SCL, LOW);
-    while (0)
-      ;
-    digitalWrite(SCL, HIGH);
-    while (0)
-      ;
-    digitalWrite(SCL, LOW);
+    clockCycle();
   }
 
   for (m = 12; m <= 15; m++) // Bits 12-15 All are LOW = 0
   {
     digitalWrite(SDI, LOW);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
-    digitalWrite(SCL, HIGH);
-    delayMicroseconds(1);
-    digitalWrite(SCL, LOW);
-    delayMicroseconds(1);
+    clockCycle();
   }
 
   setCS();
