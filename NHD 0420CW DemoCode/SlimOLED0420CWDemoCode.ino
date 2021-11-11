@@ -197,163 +197,47 @@ void Right()
 }
 
 void Left()
-{                //Shift Left Section
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x53);    //S
-  data(0x63);    //c
-  data(0x72);    //r
-  data(0x6F);    //o
-  data(0x6C);    //l
-  data(0x6C);    //l
-  data(0x20);    //Space
-  data(0x4C);    //L
-  data(0x65);    //e
-  data(0x66);    //f
-  data(0x74);    //t
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0xE1);    // <
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  command(0x18); // Shift to left
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
-  command(0x18); // Shift
-  delay(100);    // Time delay between shifts
+{                
+  //Shift Left Section
+
+  for(int i = 0; i < 23; i++)
+  {
+    data(' ');    //Space
+  }
+
+  data('S');
+  data('c');
+  data('r');
+  data('o');
+  data('l');
+  data('l');
+  data(' '); //Space
+  data('L');
+  data('e');
+  data('f');
+  data('t');
+
+  for(int i = 0; i < 8; i++)
+  {
+    data(' ');    //Space
+  }
+
+  for(int i = 0; i < 7; i++)
+  {
+    data(0xE1);    // <
+    data(' ');    //Space
+  }
+
+  for(int i = 0; i < 24; i++)
+  {
+    data(' ');    //Space
+  }
+
+  for(int i = 0; i < 42; i++)
+  {
+    command(0x18); // Shift to left
+    delay(100);    // Time delay between shifts
+  }
 }
 
 void Unique()
