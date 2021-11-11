@@ -13,59 +13,80 @@
 #define SDI 11 // Serial Data IN
 #define CS 9   // Chip Select
 
-void command(unsigned char i) // Command Writing Function
+void setCS()
+{
+  digitalWrite(CS, HIGH); // END of data Line
+}
+
+void clearCS()
+{
+  digitalWrite(CS, LOW); // CS MUST be low for that transfer of data
+  delayMicroseconds(1);
+}
+
+void command(unsigned char data) // Command Writing Function
 {
   unsigned int m;
-  digitalWrite(CS, LOW); // CS MUST be low for that transfer of data
+
+  clearCS();
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 1st - '1' of STARTING byte
   digitalWrite(SCL, LOW);  // Beginning of CLOCK Cycle
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW); // Ending of CLOCK Cycle
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 2nd - '1' of STARTING byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 3rd - '1' of STARTING byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 4th - '1' of STARTING byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 5th - '1' of STARTING byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, LOW); // Writing to the Slim OLED
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, LOW); //LOW FOR COMMAND funtion on DC bit
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, LOW); // Final 0 bit to end starting byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   for (m = 0; m <= 3; m++) // First 4 bits of data retrieval
   {
-    if ((i & 0x01) == 0x01) // Comapring the LSB i.e. (0000 0001)
+    if ((data & 0x01) == 0x01) // Comapring the LSB i.e. (0000 0001)
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
     while (0)
       ;
-    i = (i >> 1); // Left Shift 1 bit to be compared
+    data = (data >> 1); // Left Shift 1 bit to be compared
 
     digitalWrite(SCL, LOW);
     while (0)
@@ -75,6 +96,7 @@ void command(unsigned char i) // Command Writing Function
       ;
     digitalWrite(SCL, LOW);
   }
+
   for (m = 4; m <= 7; m++) // Next 4 bits of information all dummy vaulues '0'
   {
     digitalWrite(SDI, LOW);
@@ -85,15 +107,16 @@ void command(unsigned char i) // Command Writing Function
     digitalWrite(SCL, LOW);
     delayMicroseconds(1);
   }
+
   for (m = 8; m <= 11; m++) // Next 4 bits
   {
-    if ((i & 0x01) == 0x01)
+    if ((data & 0x01) == 0x01)
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
     while (0)
       ;
-    i = (i >> 1);
+    data = (data >> 1);
     digitalWrite(SCL, LOW);
     while (0)
       ;
@@ -102,6 +125,7 @@ void command(unsigned char i) // Command Writing Function
       ;
     digitalWrite(SCL, LOW);
   }
+
   for (m = 12; m <= 15; m++) // Last 4 bits
   {
     digitalWrite(SDI, LOW);
@@ -112,62 +136,73 @@ void command(unsigned char i) // Command Writing Function
     digitalWrite(SCL, LOW);
     delayMicroseconds(1);
   }
-  digitalWrite(CS, HIGH); // END of data Line
+
+  clearCS();
 }
 
-void data(unsigned char i)
+void data(unsigned char data)
 {
   unsigned int m;
-  digitalWrite(CS, LOW); // Start of data transfer
+
+  clearCS();
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 1st - '1'
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 2nd - '1'
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 3rd - '1'
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 4th - '1'
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // 5th - '1'
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, LOW); // Write
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, HIGH); // HIGH for DATA
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   delayMicroseconds(1);
   digitalWrite(SDI, LOW); // Final 0 bit to end starting byte
   digitalWrite(SCL, LOW);
   digitalWrite(SCL, HIGH);
   digitalWrite(SCL, LOW);
+
   for (m = 0; m <= 3; m++) // Bits 0-3
   {
-    if ((i & 0x01) == 0x01) // Bit Comparator
+    if ((data & 0x01) == 0x01) // Bit Comparator
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
     while (0)
       ;
-    i = (i >> 1);
+    data = (data >> 1);
     digitalWrite(SCL, LOW);
     while (0)
       ;
@@ -176,6 +211,7 @@ void data(unsigned char i)
       ;
     digitalWrite(SCL, LOW);
   }
+
   for (m = 4; m <= 7; m++) // Bits 4-7 All are LOW = 0
   {
     digitalWrite(SDI, LOW);
@@ -186,15 +222,16 @@ void data(unsigned char i)
     digitalWrite(SCL, LOW);
     delayMicroseconds(1);
   }
+
   for (m = 8; m <= 11; m++) // Bits 8-11
   {
-    if ((i & 0x01) == 0x01)
+    if ((data & 0x01) == 0x01)
       digitalWrite(SDI, HIGH);
     else
       digitalWrite(SDI, LOW);
     while (0)
       ;
-    i = (i >> 1);
+    data = (data >> 1);
     digitalWrite(SCL, LOW);
     while (0)
       ;
@@ -203,6 +240,7 @@ void data(unsigned char i)
       ;
     digitalWrite(SCL, LOW);
   }
+
   for (m = 12; m <= 15; m++) // Bits 12-15 All are LOW = 0
   {
     digitalWrite(SDI, LOW);
@@ -213,8 +251,8 @@ void data(unsigned char i)
     digitalWrite(SCL, LOW);
     delayMicroseconds(1);
   }
-  digitalWrite(CS, HIGH); //END of the data transfer
-  delayMicroseconds(1);
+
+  setCS();
 }
 
 void StartMessage()
