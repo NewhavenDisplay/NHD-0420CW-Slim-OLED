@@ -13,6 +13,28 @@
 #define SDI 11 // Serial Data IN
 #define CS 9   // Chip Select
 
+#define FUNCTION_SET 0x20
+#define LINES_2_4 0x08
+#define LINES_1_3 0x00
+#define DOUBLEHEIGHT_ON 0x04
+#define DOUBLEHEIGHT_OFF 0x00
+#define SET_EXREG_RE 0x02 // Extended function registers enable
+#define CLEAR_EXREG_RE 0x00
+#define SET_EXREG_IS 0x01 // Special registers enable
+#define CLEAR_EXREG_IS 0x00
+
+#define SET_DISPLAY 0x08
+#define DISPLAY_ON 0x04
+#define DISPLAY_OFF 0x00
+#define CURSOR_ON 0x02
+#define CURSOR_OFF 0x00
+#define CURSOR_BLINK_ON 0x01
+#define CURSOR_BLINK_OFF 0x00
+
+#define SET_DDRAM_ADDR 0x80
+
+uint8_t _rowOffsets[4];
+
 void setCS()
 {
   digitalWrite(CS, HIGH); // END of data Line
@@ -64,13 +86,11 @@ void command(unsigned char data) // Command Writing Function
   putData(firstByte);
   putData(secondByte);
 
-  clearCS();
+  setCS();
 }
 
 void data(unsigned char data)
 {
-  unsigned int m;
-
   uint8_t firstByte = data & 0x0F; // Clear upper nibble.
   uint8_t secondByte = (data >> 4) & 0x0F; // Right shift by 4 and clear upper nibble.
 
@@ -313,13 +333,6 @@ void Unique()
   data(0x15); //>>
 }
 
-void Clear()
-{
-  delay(200);
-  command(0x01); // Clear display
-  command(0x02); // Return Home (0,0)
-}
-
 void initialize()
 {
   command(0x2A); // Function Set (extended command set)
@@ -349,55 +362,92 @@ void initialize()
   command(0xDB); // Set VCOMH deselect level
   command(0x40); // Set VCOMH deselect level
   command(0x78); // OLED command set disabled
-  command(0x28); // Function SET
-  command(0x01); // Clear
-  command(0x80); // (1,1) starting point
-  command(0x0C); // Display ON
+
+  functionSet(LINES_2_4, DOUBLEHEIGHT_OFF, CLEAR_EXREG_IS);
+  ClearScreen();
+  setCursor(0, 0);
+  setDisplay(DISPLAY_ON, CURSOR_OFF, CURSOR_BLINK_OFF);
   delay(10);
 }
 
+void functionSet(uint8_t lines, uint8_t doubleHeight, uint8_t extensionRegIS)
+{
+  command(FUNCTION_SET | lines | doubleHeight | CLEAR_EXREG_RE | extensionRegIS);
+}
+
+void setDisplay(uint8_t display, uint8_t cursor, uint8_t cursorBlink)
+{
+  command(SET_DISPLAY | display | cursor | cursorBlink);
+}
+
+void setCursor(int x, int y)
+{
+  uint8_t DDRAM_addr = SET_DDRAM_ADDR | (_rowOffsets[y] + x);
+  command(SET_DDRAM_ADDR | (_rowOffsets[y] + x));
+  delay(1);
+}
+
+void Clear()
+{
+  delay(200);
+  ClearScreen();
+  Home();
+}
+
+void ClearScreen()
+{
+  command(0x01); // Clear display
+}
+
+void Home()
+{
+  command(0x02); // Return Home (0,0)
+}
+
 void Big()
-{                // Code for Double Height
+{                
+  // Code for Double Height
   command(0x2A); // Function Set (extended command set)
   command(0x1D); // Double Height Enabled
   command(0x2D); // Double Line Enabled
   command(0x2A); // Function Set (extended command set)
   command(0x1F); // Display Shirt Enabled
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x44);    //D
-  data(0x6F);    //o
-  data(0x75);    //u
-  data(0x62);    //b
-  data(0x6C);    //l
-  data(0x65);    //e
-  data(0x20);    //Space
-  data(0x48);    //H
-  data(0x65);    //e
-  data(0x69);    //i
-  data(0x67);    //g
-  data(0x68);    //h
-  data(0x74);    //t
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x20);    //Space
-  data(0x43);    //C
-  data(0x68);    //h
-  data(0x61);    //a
-  data(0x72);    //r
-  data(0x61);    //a
-  data(0x63);    //c
-  data(0x74);    //t
-  data(0x65);    //e
-  data(0x72);    //r
-  data(0x73);    //s
-  data(0x21);    //!
+
+  for(int i = 0; i < 3; i++)
+  {
+    data(' ');    //Space
+  }
+
+  data('D');    //D
+  data('o');    //o
+  data('u');    //u
+  data('b');    //b
+  data('l');    //l
+  data('e');    //e
+  data(' ');    //Space
+  data('H');    //H
+  data('e');    //e
+  data('i');    //i
+  data('g');    //g
+  data('h');    //h
+  data('t');    //t
+
+  for(int i = 0; i < 8; i++)
+  {
+    data(' ');    //Space
+  }
+
+  data('C');    //C
+  data('h');    //h
+  data('a');    //a
+  data('r');    //r
+  data('a');    //a
+  data('c');    //c
+  data('t');    //t
+  data('e');    //e
+  data('r');    //r
+  data('s');    //s
+  data('!');    //!
 }
 
 void setup()
@@ -405,6 +455,11 @@ void setup()
   pinMode(9, OUTPUT);  // Declaring  CS as OUTPUT
   pinMode(11, OUTPUT); // Delcaring SDI as OUTPUT
   pinMode(12, OUTPUT); // Declaring SCL as OUTPUT
+
+  _rowOffsets[0] = 0x00;
+  _rowOffsets[1] = 0x20;
+  _rowOffsets[2] = 0x40;
+  _rowOffsets[3] = 0x60;
 
   initialize();            // Initialization
   StartMessage();      // Start Message
