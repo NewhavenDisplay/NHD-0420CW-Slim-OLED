@@ -411,7 +411,7 @@ void Big()
   command(0x1D); // Double Height Enabled
   command(0x2D); // Double Line Enabled
   command(0x2A); // Function Set (extended command set)
-  command(0x1F); // Display Shirt Enabled
+  command(0x1F); // Display Shift Enabled
 
   for(int i = 0; i < 3; i++)
   {
