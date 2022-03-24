@@ -345,14 +345,14 @@ void initialize()
   command(0xD5); // Set displayed clock divide ratio/oscillator frequency
   command(0x70); // Set displayed clock divide ratio/oscillator frequency
   command(0x78); // OLED command set disabled
-  command(0x09); // Extemded function set (4-Lines)
+  command(0x09); // Extended function set (4-Lines)
   command(0x06); // COM SEG direction
   command(0x72); // Function selection B
   data(0x00);    // ROM CGRAM
   command(0x28); // Function Set (fundamental command set)
   command(0x79); // OLED command set enabled
   command(0xDA); // Set SEG pins hardware configuration
-  command(0x00); // Set SEG pins harware configuration
+  command(0x00); // Set SEG pins hardware configuration
   command(0xDC); // Function selection C
   command(0x10); // Function selection C
   command(0x81); // Contrast Control
